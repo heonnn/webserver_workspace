@@ -27,7 +27,7 @@ public class AdminMemberFinderServlet extends HttpServlet {
 	 * select * from member where member_name like '%abc%'
 	 * select * from member where gender like 'M'
 	 * 
-	 * -> select * from member where # like ? 
+	 * -> select * from member where # like ?
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 1. 사용자 입력값 처리
@@ -45,6 +45,9 @@ public class AdminMemberFinderServlet extends HttpServlet {
 		
 		// 3. view단 처리
 		request.setAttribute("list", list);
+		request.setAttribute("searchType", searchType);
+		request.setAttribute("searchKeyword", searchKeyword);
+		
 		request.getRequestDispatcher("/WEB-INF/views/admin/memberList.jsp")
 			.forward(request, response);
 	}

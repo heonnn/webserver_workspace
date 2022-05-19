@@ -79,10 +79,10 @@
 			<tr>
 				<th>성별 </th>
 				<td>
-			       		 <input type="radio" name="gender" id="gender0" value="M" <%= "M".equals(gender) ? "checked" : "" %>>
-						 <label for="gender0">남</label>
-						 <input type="radio" name="gender" id="gender1" value="F" <%= "F".equals(gender) ? "checked" : "" %>>
-						 <label for="gender1">여</label>
+		       		<input type="radio" name="gender" id="gender0" value="M" <%= "M".equals(gender) ? "checked" : "" %>>
+					<label for="gender0">남</label>
+					<input type="radio" name="gender" id="gender1" value="F" <%= "F".equals(gender) ? "checked" : "" %>>
+					<label for="gender1">여</label>
 				</td>
 			</tr>
 			<tr>
