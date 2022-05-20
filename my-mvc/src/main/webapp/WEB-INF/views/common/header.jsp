@@ -3,6 +3,18 @@
     pageEncoding="UTF-8"%>
 <%
 	Member loginMember = (Member) session.getAttribute("loginMember");
+	String msg = (String) session.getAttribute("msg");
+	if(msg != null) session.removeAttribute("msg");
+	
+	String saveId= null;
+	Cookie[] cookies = request.getCookies();
+	if(cookies != null) {
+		for(Cookie cookie : cookies) {
+			if("saveId".equals(cookie.getName())) {
+				saveId = cookie.getValue();
+			}
+		}
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -23,7 +35,7 @@
 			        <form id="loginFrm" name="loginFrm" method="POST" action="<%= request.getContextPath() %>/member/memberLogin">
 		            	<table>
 			                <tr>
-			                    <td><input type="text" name="memberId" id="memberId" placeholder="아이디" tabindex="1"></td>
+			                    <td><input type="text" name="memberId" id="memberId" placeholder="아이디" tabindex="1" value="<%= saveId != null ? saveId : "" %>"></td>
 			                    <td><input type="submit" value="로그인" tabindex="3"></td>
 			                </tr>
 			                <tr>
@@ -32,7 +44,7 @@
 			                </tr>
 			                <tr>
 			                    <td colspan="2">
-			                        <input type="checkbox" name="saveId" id="saveId" />
+			                        <input type="checkbox" name="saveId" id="saveId" <%= saveId != null ? "checked" : "" %>/>
 			                        <label for="saveId">아이디저장</label>&nbsp;&nbsp;
 			                        <input type="button" value="회원가입" onclick="location.href='#">
 			                    </td>
@@ -50,7 +62,7 @@
 	        				<tr>
 	        					<td>
 	        						<input type="button" value="내정보보기" />
-	        						<input type="button" value="로그아웃"  />
+	        						<input type="button" value="로그아웃" onclick="location.href='<%= request.getContextPath() %>/member/memberLogout'"/>
 	        					</td>
 	        				</tr>
 	        			</tbody>

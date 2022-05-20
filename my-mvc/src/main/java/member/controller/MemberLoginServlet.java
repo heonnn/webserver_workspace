@@ -42,7 +42,7 @@ public class MemberLoginServlet extends HttpServlet {
 		// 3. 업무로직
 		Member loginMember = memberService.findByMemberId(memberId);
 
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		if(loginMember != null && loginMember.getPassword().equals(password)) {
 			session.setAttribute("loginMember", loginMember);
 			
