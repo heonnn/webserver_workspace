@@ -1,6 +1,12 @@
+<%@page import="board.model.dto.Board"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%
+	List<Board> list = (List<Board>) request.getAttribute("list");
+	String pagebar = (String) request.getAttribute("pagebar");
+%>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/board.css" />
 <section id="board-container">
 	<h2>게시판 </h2>
@@ -16,19 +22,33 @@
 			</tr>
 		</thead>
 		<tbody>
+<%
+	if(list != null && !list.isEmpty()) {
+		for(Board board : list) {
+%>
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td><%= board.getNo() %></td>
+				<td><%= board.getTitle() %></td>
+				<td><%= board.getMemberId() %></td>
+				<td><%= board.getRegDate() %></td>
 				<td>
 					<img src="<%= request.getContextPath() %>" alt="" />
 				</td>
-				<td></td>
+				<td><%= board.getReadCount() %></td>
 			</tr>
+<% 
+		}
+	} else {
+%>
+			<tr>
+				<td colspan=6>조회된 행이 없습니다.</td>
+			</tr>
+		<% } %>
 		</tbody>
 	</table>
 
-	<div id='pageBar'></div>
+	<div id='pageBar'>
+		<%= pagebar %>
+	</div>
 </section>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
