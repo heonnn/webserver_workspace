@@ -19,6 +19,7 @@ import member.model.dto.Member;
  */
 public class MemberService {
 	
+	public static final int NUM_PER_PAGE = 10; // 한페이지당 표시할 페이지 수
 	private MemberDao memberDao = new MemberDao();
 	
 	public Member findByMemberId(String memberId) {
@@ -88,9 +89,9 @@ public class MemberService {
 		return result;
 	}
 
-	public List<Member> findAll() {
+	public List<Member> findAll(Map<String, Object> param) {
 		Connection conn = getConnection();
-		List<Member> list = memberDao.findAll(conn);
+		List<Member> list = memberDao.findAll(conn, param);
 		close(conn);
 		return list;
 	}
@@ -114,6 +115,13 @@ public class MemberService {
 		List<Member> list = memberDao.findBy(conn, param);
 		close(conn);
 		return list;
+	}
+
+	public int getTotalContents() {
+		Connection conn = getConnection();
+		int totalContents = memberDao.getTotalContents(conn);
+		close(conn);
+		return totalContents;
 	}
 
 }

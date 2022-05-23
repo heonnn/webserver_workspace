@@ -5,6 +5,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <% 
 	List<Member> list = (List<Member>) request.getAttribute("list");
+	String pagebar = (String) request.getAttribute("pagebar");
 	String searchType = (String) request.getAttribute("searchType");
 	String searchKeyword = (String) request.getAttribute("searchKeyword");
 %>
@@ -97,7 +98,11 @@ div#search-gender {display: <%= "gender".equals(searchType) ? "inline-block" : "
 %>
 		</tbody>
 	</table>
+	<div id="pagebar">
+		<%= pagebar %>
+	</div>
 </section>
+
 <form name="updateMemberRoleFrm" action="<%= request.getContextPath() %>/admin/memberRoleUpdate" method="POST">
 	<input type="hidden" name="memberId"/>
 	<input type="hidden" name="memberRole"/>
