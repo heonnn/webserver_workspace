@@ -95,4 +95,19 @@ public class BoardService {
 		return attach;
 	}
 
+	public int deleteBoard(int no) {
+		Connection conn = getConnection();
+		int result = 0;
+		try {
+			result = boardDao.deleteBoard(conn, no);
+			commit(conn);
+		} catch(Exception e) {
+			rollback(conn);
+			throw e;
+		} finally {
+			close(conn);
+		}
+		return result;
+	}
+
 }

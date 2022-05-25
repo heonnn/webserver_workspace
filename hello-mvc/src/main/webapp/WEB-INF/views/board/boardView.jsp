@@ -55,6 +55,9 @@
 				<input type="button" value="수정하기" onclick="updateBoard()">
 				<input type="button" value="삭제하기" onclick="deleteBoard()">
 			</th>
+			<form name="boardDeleteFrm" action="<%= request.getContextPath() %>/board/boardDelete" method="POST">
+				<input type="hidden" name="no" value="<%= board.getNo() %>"/>
+			</form>
 		<% } %>
 		</tr>
 		<script>
@@ -64,7 +67,7 @@
 		 * - 저장된 파일 삭제 : java.io.File
 		 */
 		const deleteBoard = () => {
-			
+			confirm("삭제하시겠습니까?") && document.boardDeleteFrm.submit();
 		};
 			
 		</script>
