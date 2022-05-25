@@ -98,7 +98,7 @@ const checkIdDuplicate = () => {
 passwordCheck.onblur = () => {
 	if(_password.value !== passwordCheck.value) {
 		alert("비밀번호가 일치하지 않습니다.");
-		_passwordCheck.select();
+		_password.select();
 		return false;
 	}
 	return true;

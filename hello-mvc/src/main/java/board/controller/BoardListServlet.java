@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import board.model.dto.Board;
+import board.model.dto.BoardExt;
 import board.model.service.BoardService;
 import common.HelloMvcUtils;
 
@@ -46,7 +46,7 @@ public class BoardListServlet extends HttpServlet {
 			
 			// 2. 업무로직
 			// 2.a content 영역
-			List<Board> list = boardService.findAll(param);
+			List<BoardExt> list = boardService.findAll(param);
 			
 			// 2.b pagebar 영역
 			int totalContents = boardService.getToalContents();

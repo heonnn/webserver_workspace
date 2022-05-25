@@ -1,15 +1,18 @@
-<%@page import="board.model.dto.Board"%>
+<%@page import="board.model.dto.BoardExt"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%
-	List<Board> list = (List<Board>) request.getAttribute("list");
+	List<BoardExt> list = (List<BoardExt>) request.getAttribute("list");
 	String pagebar = (String) request.getAttribute("pagebar");
 %>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/board.css" />
 <section id="board-container">
 	<h2>게시판 </h2>
+<% if(loginMember != null) { %>
+	<input type="button" value="글쓰기" id="btn-add" onclick="location.href='<%= request.getContextPath() %>/board/boardEnroll';"/>
+<% } %>
 	<table id="tbl-board">
 		<thead>
 			<tr>
@@ -24,15 +27,21 @@
 		<tbody>
 <%
 	if(list != null && !list.isEmpty()) {
-		for(Board board : list) {
+		for(BoardExt board : list) {
 %>
 			<tr>
 				<td><%= board.getNo() %></td>
-				<td><%= board.getTitle() %></td>
+				<td>
+					<a href="<%= request.getContextPath() %>/board/boardView?no=<%= board.getNo() %>"><%= board.getTitle() %></a>
+				</td>
 				<td><%= board.getMemberId() %></td>
 				<td><%= board.getRegDate() %></td>
 				<td>
-					<img src="<%= request.getContextPath() %>" alt="" />
+		<%
+		 if(board.getAttachCount() > 0) {
+		%>
+					<img src="<%= request.getContextPath() %>/images/file.png" alt="" />
+		<% } %>
 				</td>
 				<td><%= board.getReadCount() %></td>
 			</tr>

@@ -189,5 +189,4 @@ commit;
 select * from board order by reg_date desc;
 select * from attachment order by reg_date desc;
 
-select * from(select row_number() over(order by reg_date desc) rnum, b.* from board b) where rnum between 1 and 10;
-
+select * from attachment where board_no = 121;
