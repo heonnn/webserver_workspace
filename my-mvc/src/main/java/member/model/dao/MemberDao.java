@@ -1,5 +1,6 @@
 package member.model.dao;
 
+import static common.JdbcTemplate.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -35,14 +36,13 @@ public class MemberDao {
 			pstmt.setString(1, memberId);
 			
 			rset = pstmt.executeQuery();
-			while(rset.next()) {
-				member = handleMemberResultSet(rset);
-			}
+			if(rset.next()) member = handleMemberResultSet(rset);
 		} catch(SQLException e) {
 			throw new MemberException("로그인 오류", e);
+		} finally {
+			close(pstmt);
 		}
 		return member;
-		
 	}
 	
 	private Member handleMemberResultSet(ResultSet rset) throws SQLException {
@@ -60,6 +60,32 @@ public class MemberDao {
 		member.setHobby(rset.getString("hobby"));
 		member.setEnrollDate(rset.getDate("enroll_date"));
 		return member;
+	}
+
+	public int insertMember(Connection conn, Member member) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertMember");
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMemberId());
+			pstmt.setString(2, member.getPassword());
+			pstmt.setString(3, member.getMemberName());
+			pstmt.setString(4, member.getMemberRole().toString());
+			pstmt.setString(5, member.getGender());
+			pstmt.setDate(6, member.getBirthday());
+			pstmt.setString(7, member.getEmail());
+			pstmt.setString(8, member.getPhone());
+			pstmt.setString(9, member.getAddress());
+			pstmt.setString(10, member.getHobby());
+			
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			throw new MemberException("회원가입 오류", e);
+		} finally {
+			close(pstmt);
+		}
+		return result;
 	}
 
 	

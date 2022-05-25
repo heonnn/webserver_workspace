@@ -22,6 +22,30 @@
 <meta charset="UTF-8">
 <title>Hello MVC</title>
 <script>
+window.onload = () => {
+	<% if(msg != null) { %>
+		alert("<%= msg %>");
+	<% } %>
+
+	<% if(loginMember == null) { %>
+		document.loginFrm.onsubmit = (e) => {
+			const memberIdVal = memberId.value;
+			const passwordVal = password.value;
+			
+			if(!/^.{4,}$/.test(memberIdVal)) {
+				alert("유효한 아이디를 입력해주세요.");
+				memberId.select();
+				return false;
+			}
+			if(!/^.{4,}$/.test(passwordVal)) {
+				alert("유효한 비밀번호를 입력해주세요.");
+				password.select();
+				return false;
+			}
+			
+		};
+	<% } %>
+	};
 </script>
 </head>
 <body>
@@ -46,7 +70,7 @@
 			                    <td colspan="2">
 			                        <input type="checkbox" name="saveId" id="saveId" <%= saveId != null ? "checked" : "" %>/>
 			                        <label for="saveId">아이디저장</label>&nbsp;&nbsp;
-			                        <input type="button" value="회원가입" onclick="location.href='#">
+			                        <input type="button" value="회원가입" onclick="location.href='<%= request.getContextPath() %>/member/memberEnroll'"/>
 			                    </td>
 			                </tr>
 			            </table>
