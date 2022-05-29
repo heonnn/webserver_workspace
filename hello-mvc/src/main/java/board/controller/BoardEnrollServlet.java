@@ -59,8 +59,8 @@ public class BoardEnrollServlet extends HttpServlet {
 			// 2. MultipartRequest 객체 생성
 			// b. 파일저장경로
 			// C:\\Workspaces\\webserver_workspace\\hello-mvc\\src\\main\\webapp\\upload\\board
-			ServletContext application = getServletContext();
-			String webRoot = application.getRealPath("/");
+//			ServletContext application = getServletContext();
+//			String webRoot = application.getRealPath("/");
 			// File.separator 운영체제별 경로 구분자 (window : \, mac/linux : /)
 //			String saveDirectory = webRoot + "upload" + File.separator + "board";
 			String saveDirectory = getServletContext().getRealPath("/upload/board");
@@ -104,7 +104,7 @@ public class BoardEnrollServlet extends HttpServlet {
 			int result = boardService.insertBoard(board);
 			
 			// 5. 리다이렉트
-			response.sendRedirect(request.getContextPath() + "/board/boardList");
+			response.sendRedirect(request.getContextPath() + "/board/boardView?no=" + board.getNo());
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw e;

@@ -32,11 +32,12 @@ public class BoardDeleteServlet extends HttpServlet {
 			// 2. 업무로직
 			// a. 파일 삭제
 			List<Attachment> attachments = boardService.findByNo(no).getAttachments();
-			String saveDirectory = getServletContext().getRealPath("/upload/board");
-			for(Attachment attach : attachments) {
-				File file = new File(saveDirectory, attach.getRenamedFilename());
-				if(file.exists()) file.delete();
-			}
+			if(attachments != null && !attachments.isEmpty())
+				for(Attachment attach : attachments) {
+					String saveDirectory = getServletContext().getRealPath("/upload/board");
+					File delFile = new File(saveDirectory, attach.getRenamedFilename());
+					if(delFile.exists()) delFile.delete();
+				}
 			// b. db
 			int result = boardService.deleteBoard(no);
 			

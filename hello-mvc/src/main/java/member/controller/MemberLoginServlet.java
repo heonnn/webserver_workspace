@@ -70,10 +70,8 @@ public class MemberLoginServlet extends HttpServlet {
 		}
 		
 		// 4. 응답처리 (jsp 위임 처리) -> 리다이렉트
-//		RequestDispatcher reqDispatcher = request.getRequestDispatcher("/index.jsp");
-//		reqDispatcher.forward(request, response);
-		
-		response.sendRedirect(request.getContextPath() + "/");
+		String Referer = request.getHeader("Referer"); // 절대주소값
+		response.sendRedirect(Referer);
 	}
 
 }

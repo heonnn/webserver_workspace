@@ -8,6 +8,7 @@ import java.util.Map;
 import board.model.dao.BoardDao;
 import board.model.dto.Attachment;
 import board.model.dto.Board;
+import board.model.dto.BoardComment;
 import board.model.dto.BoardExt;
 
 public class BoardService {
@@ -43,6 +44,7 @@ public class BoardService {
 			
 			// 2. board pk 가져오기
 			int no = boardDao.findCurrentBoardNo(conn);
+			board.setNo(no);
 			System.out.println("방금 등록된 board.no = " + no);
 			
 			// 3. attachment에 등록
@@ -68,7 +70,9 @@ public class BoardService {
 		Connection conn = getConnection();
 		BoardExt board = boardDao.findByNo(conn, no); // board 테이블 조회
 		List<Attachment> attachments = boardDao.findAttachmentByBoardNo(conn, no); // attachment 테이블 조회
+		List<BoardComment> comments = boardDao.findBoardCommentByBoardNo(conn, no); // attachment 테이블 조회
 		board.setAttachments(attachments);
+		board.setBoardComments(comments);
 		close(conn);
 		return board;
 	}
@@ -100,6 +104,76 @@ public class BoardService {
 		int result = 0;
 		try {
 			result = boardDao.deleteBoard(conn, no);
+			commit(conn);
+		} catch(Exception e) {
+			rollback(conn);
+			throw e;
+		} finally {
+			close(conn);
+		}
+		return result;
+	}
+
+	// 첨부파일 없던 게시글 업데이트
+	public int updateBoard(BoardExt board) {
+		Connection conn = getConnection();
+		int result = 0;
+		try {
+			// 1. board 수정
+			result = boardDao.updateBoard(conn, board);
+			
+			// 2. attachment에 등록
+			List<Attachment> attachments = ((BoardExt) board).getAttachments();
+			if(attachments != null && !attachments.isEmpty()) {
+				for(Attachment attach : attachments) {
+					result = boardDao.insertAttachment(conn, attach);
+				}
+			}
+			commit(conn);
+		} catch(Exception e) {
+			rollback(conn);
+			throw e;
+		} finally {
+			close(conn);
+		}
+		return result;
+	}
+
+	public int deleteAttachment(int no) {
+		Connection conn = getConnection();
+		int result = 0;
+		try {
+			result = boardDao.deleteAttachment(conn, no);
+			commit(conn);
+		} catch(Exception e) {
+			rollback(conn);
+			throw e;
+		} finally {
+			close(conn);
+		}
+		return result;
+	}
+
+	public int insertBoardComment(BoardComment bc) {
+		Connection conn = getConnection();
+		int result = 0;
+		try {
+			result = boardDao.insertBoardComment(conn, bc);
+			commit(conn);
+		} catch(Exception e) {
+			rollback(conn);
+			throw e;
+		} finally {
+			close(conn);
+		}
+		return result;
+	}
+
+	public int deleteBoardComment(int commentNo) {
+		Connection conn = getConnection();
+		int result = 0;
+		try {
+			result = boardDao.deleteBoardComment(conn, commentNo);
 			commit(conn);
 		} catch(Exception e) {
 			rollback(conn);

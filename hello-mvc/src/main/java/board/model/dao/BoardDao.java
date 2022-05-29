@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import board.model.dto.Attachment;
 import board.model.dto.Board;
+import board.model.dto.BoardComment;
 import board.model.dto.BoardExt;
 import board.model.exception.BoardException;
 
@@ -247,4 +248,107 @@ public class BoardDao {
 		}
 		return result;
 	}
+
+	public int updateBoard(Connection conn, BoardExt board) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("updateBoard");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, board.getTitle());
+			pstmt.setString(2, board.getContent());
+			pstmt.setInt(3, board.getNo());
+			
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			throw new BoardException("게시글 수정 오류", e);
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+	public int deleteAttachment(Connection conn, int no) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("deleteAttachment");
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			throw new BoardException("첨부파일 삭제 오류", e);
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+	public int insertBoardComment(Connection conn, BoardComment bc) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertBoardComment");
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bc.getCommentLevel());
+			pstmt.setString(2, bc.getMemberId());
+			pstmt.setString(3, bc.getContent());
+			pstmt.setInt(4, bc.getBoardNo());
+			// BoardComment#commentRef 0 ~ n -> board_comment.comment_ref null ~ n
+			pstmt.setObject(5, bc.getCommentRef() == 0 ? null : bc.getCommentRef());
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			throw new BoardException("댓글 등록 오류", e);
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+	public List<BoardComment> findBoardCommentByBoardNo(Connection conn, int no) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		List<BoardComment> comments = new ArrayList<>();
+		String sql = prop.getProperty("findBoardCommentByBoardNo");
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				BoardComment bc = new BoardComment();
+				bc.setNo(rset.getInt("no"));
+				bc.setCommentLevel(rset.getInt("comment_level"));
+				bc.setMemberId(rset.getString("member_id"));
+				bc.setContent(rset.getString("content"));
+				bc.setBoardNo(rset.getInt("board_no"));
+				bc.setCommentRef(rset.getInt("comment_ref"));
+				bc.setRegDate(rset.getDate("reg_date"));
+				comments.add(bc);
+			}
+		} catch(SQLException e) {
+			throw new BoardException("댓글 목록 조회 오류", e);
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return comments;
+	}
+
+	public int deleteBoardComment(Connection conn, int commentNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("deleteBoardComment");
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, commentNo);
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			throw new BoardException("댓글 삭제 오류", e);
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
 }
